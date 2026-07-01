@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.44.1.10279",
+      "templateHash": "7099810989650098060"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "appName": {
+      "type": "string",
+      "defaultValue": "task-tracker"
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "prod"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}-plan-{1}', parameters('appName'), parameters('environment'))]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "F1",
+        "tier": "Free"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}-api-{1}', parameters('appName'), parameters('environment'))]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', format('{0}-plan-{1}', parameters('appName'), parameters('environment')))]",
+        "siteConfig": {
+          "netFrameworkVersion": "v9.0",
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "Production"
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', format('{0}-plan-{1}', parameters('appName'), parameters('environment')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/staticSites",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}-frontend-{1}', parameters('appName'), parameters('environment'))]",
+      "location": "eastus2",
+      "sku": {
+        "name": "Free",
+        "tier": "Free"
+      },
+      "properties": {}
+    }
+  ],
+  "outputs": {
+    "apiUrl": {
+      "type": "string",
+      "value": "[format('https://{0}', reference(resourceId('Microsoft.Web/sites', format('{0}-api-{1}', parameters('appName'), parameters('environment'))), '2022-03-01').defaultHostName)]"
+    },
+    "staticWebAppName": {
+      "type": "string",
+      "value": "[format('{0}-frontend-{1}', parameters('appName'), parameters('environment'))]"
+    }
+  }
+}
