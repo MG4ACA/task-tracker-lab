@@ -3,7 +3,7 @@ name: Deploy React App
 on:
   push:
     branches: [main]
-    paths: ['frontend/**']
+    paths: ['frontend/**', '.github/workflows/frontend.yml']
 
 jobs:
   build-and-deploy:
