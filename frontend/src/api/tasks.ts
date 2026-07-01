@@ -36,7 +36,7 @@ export async function createTasks(title: string, description: string): Promise<T
 }
 
 export async function updateTaskStatus(id: number, status:TaskStatus):Promise<Task>{
-  const res  = await fetch(`${API_BASE}/tasks/{id}/status`, {
+  const res  = await fetch(`${API_BASE}/tasks/${id}/status`, {
     method: 'PATCH',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({status})
@@ -47,7 +47,7 @@ export async function updateTaskStatus(id: number, status:TaskStatus):Promise<Ta
 }
 
 export async function deleteTask(id: number): Promise<void>{
-  const res = await fetch(`${API_BASE}/tasks${id}`, {
+  const res = await fetch(`${API_BASE}/tasks/${id}`, {
     method: 'DELETE',
   });
   if (!res.ok)
