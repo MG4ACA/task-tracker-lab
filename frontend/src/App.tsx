@@ -22,7 +22,7 @@ function App() {
     setTasks(prev => prev.filter(t => t.id !== id));
 
   return (
-    <div style={{ maxWidth: '700px', margin: '40px auto', padding: '0 20px', fontFamily: 'sans-serif' }}>
+    <div style={{ maxWidth: '710px', margin: '40px auto', padding: '0 20px', fontFamily: 'sans-serif' }}>
       <h1>Task Tracker</h1>
       <hr />
       <AddTaskForm onTaskAdded={handleTaskAdded} />
